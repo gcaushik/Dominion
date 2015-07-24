@@ -1,10 +1,10 @@
 # Dominion Module
 # -*- coding: utf-8 -*-
 
-import cardnames1
+import cardnames
 import random
 
-numCards = len(cardnames1.curse_cards) + len(cardnames1.victory_cards) + len(cardnames1.treasure_cards) + len(cardnames1.victory_kingdom_cards) + len(cardnames1.kingdom_cards)
+numCards = len(cardnames.curse_cards) + len(cardnames.victory_cards) + len(cardnames.treasure_cards) + len(cardnames.victory_kingdom_cards) + len(cardnames.kingdom_cards)
 
 supply = [0] * numCards
 
@@ -67,11 +67,11 @@ def updateCoins(player,gameState,bonus):
   playerhand = gameState.hands[player]
   playercoins = 0
   for i in playerhand:
-    if i == cardnames1.copper:
+    if i == cardnames.copper:
       playercoins += 1
-    elif i == cardnames1.silver:
+    elif i == cardnames.silver:
       playercoins += 2
-    elif i == cardnames1.gold:
+    elif i == cardnames.gold:
       playercoins += 3
   playercoins += bonus 
   gameState.money[player] = playercoins
@@ -102,20 +102,20 @@ def initializeGame(numPlayers, kingdomCards, randomSeed):
   numKingdom = 10 
   
   # Set up curse cards
-  for i in cardnames1.curse_cards:
+  for i in cardnames.curse_cards:
     supply[i] = numCurse[numPlayers-2] 
   
   # Set up victory cards
-  for i in cardnames1.victory_cards: 
+  for i in cardnames.victory_cards: 
     supply[i] = numVictory[numPlayers-2]
 
   # Set up treasure cards
-  for i in cardnames1.treasure_cards: 
+  for i in cardnames.treasure_cards: 
     supply[i] = numTreasure.pop()
 
   # Set up victory kingdom cards
   # A value of -1 means that particular card was not one of the 10 chosen for this game
-  for i in cardnames1.victory_kingdom_cards:
+  for i in cardnames.victory_kingdom_cards:
     if i in kingdomCards:
       supply[i] = numVKingdom[numPlayers-2]
     else: 
@@ -123,7 +123,7 @@ def initializeGame(numPlayers, kingdomCards, randomSeed):
 
   # Set up regular kingdom cards
   # A value of -1 means that particular card was not one of the 10 chosen for this game
-  for i in cardnames1.kingdom_cards:
+  for i in cardnames.kingdom_cards:
     if i in kingdomCards:
       supply[i] = numKingdom
     else:
@@ -133,7 +133,7 @@ def initializeGame(numPlayers, kingdomCards, randomSeed):
 
   # Set up decks
   for i in range(numPlayers):
-    game.decks.append([cardnames1.estate] * 3 + [cardnames1.copper] * 7)
+    game.decks.append([cardnames.estate] * 3 + [cardnames.copper] * 7)
     supply[1] -= 3
     supply[4] -= 7  
 
@@ -206,7 +206,7 @@ def endTurn(gameState):
 
 # Is the game over
 def isGameOver(gameState):
-  if supply[cardnames1.province] == 0:
+  if supply[cardnames.province] == 0:
     return 1
   empty = [i for i in supply if i == 0]
   if len(empty) >= 3:
@@ -222,45 +222,45 @@ def scoreFor(player, gameState):
   deckSize = len(gameState.decks[player])
 
   for i in gameState.decks[player]:
-    if i == cardnames1.curse:
+    if i == cardnames.curse:
       score += -1
-    elif i == cardnames1.estate:
+    elif i == cardnames.estate:
       score += 1
-    elif i == cardnames1.duchy:
+    elif i == cardnames.duchy:
       score += 3
-    elif i == cardnames1.province:
+    elif i == cardnames.province:
       score += 6
-    elif i == cardnames1.great_hall:
+    elif i == cardnames.great_hall:
       score += 1
-    elif i == cardnames1.gardens:
+    elif i == cardnames.gardens:
       score += (deckSize/10)
 
   for i in gameState.discards[player]:
-    if i == cardnames1.curse:
+    if i == cardnames.curse:
       score += -1
-    elif i == cardnames1.estate:
+    elif i == cardnames.estate:
       score += 1
-    elif i == cardnames1.duchy:
+    elif i == cardnames.duchy:
       score += 3
-    elif i == cardnames1.province:
+    elif i == cardnames.province:
       score += 6
-    elif i == cardnames1.great_hall:
+    elif i == cardnames.great_hall:
       score += 1
-    elif i == cardnames1.gardens:
+    elif i == cardnames.gardens:
       score += (deckSize/10)
 
   for i in gameState.hands[player]:
-    if i == cardnames1.curse:
+    if i == cardnames.curse:
       score += -1
-    elif i == cardnames1.estate:
+    elif i == cardnames.estate:
       score += 1
-    elif i == cardnames1.duchy:
+    elif i == cardnames.duchy:
       score += 3
-    elif i == cardnames1.province:
+    elif i == cardnames.province:
       score += 6
-    elif i == cardnames1.great_hall:
+    elif i == cardnames.great_hall:
       score += 1
-    elif i == cardnames1.gardens:
+    elif i == cardnames.gardens:
       score += (deckSize/10)
 
   return score
@@ -321,7 +321,7 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
   
   # Reveal cards from your deck until you reveal 2 Treasure cards. 
   # Put those Treasure cards in your hand and discard the other revealed cards.
-  if card == cardnames1.adventurer:
+  if card == cardnames.adventurer:
     treasure = 0
     draw = 0
     reveal = []
@@ -333,7 +333,7 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
           draw += 1
       drawCard(currentPlayer,gameState)
       reveal.append(gameState.hands[currentPlayer].pop())  
-      if reveal[-1] in cardnames1.treasure_cards:
+      if reveal[-1] in cardnames.treasure_cards:
         treasure += 1
         gameState.hands[currentPlayer].append(reveal[-1])
         del reveal[-1]
@@ -344,7 +344,7 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
   # Return up to 2 copies of it from your hand to the Supply. 
   # Then each other player gains a copy of it.
   # choice1 is the card to reveal, and choice2 is the number of copies.
-  elif card == cardnames1.ambassador:
+  elif card == cardnames.ambassador:
     numCards = len(gameState.hands[currentPlayer])
     if choice2 < 0 or choice2 > 2:
       return -1
@@ -368,28 +368,28 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
   # +1 Buy
   # You may discard an Estate card. If you do, +$4. Otherwise, gain an Estate card.
   # choice1 > 0 means 1st option, otherwise 2nd option
-  elif card == cardnames1.baron:
+  elif card == cardnames.baron:
     gameState.numBuys += 1   
     if choice1 > 0:
       discarded = False
-      if cardnames1.estate in gameState.hands[currentPlayer]:
-        gameState.hands[currentPlayer].remove(cardnames1.estate)
+      if cardnames.estate in gameState.hands[currentPlayer]:
+        gameState.hands[currentPlayer].remove(cardnames.estate)
         discarded = True
       if discarded == True:
         bonus += 4         
       else:
-        gainCard(cardnames1.estate,gameState,0,currentPlayer)
-        if supply[cardnames1.estate] == 0:
+        gainCard(cardnames.estate,gameState,0,currentPlayer)
+        if supply[cardnames.estate] == 0:
           isGameOver(gameState)
     else:
-      gainCard(cardnames1.estate,gameState,0,currentPlayer)
-      if supply[cardnames1.estate] == 0:
+      gainCard(cardnames.estate,gameState,0,currentPlayer)
+      if supply[cardnames.estate] == 0:
         isGameOver(gameState)
     
   
   # +4 Cards; +1 Buy
   # Each other player draws a card.
-  elif card == cardnames1.council_room:
+  elif card == cardnames.council_room:
     gameState.numBuys += 1
     for i in range(4):
       drawCard(currentPlayer,gameState)        
@@ -401,20 +401,20 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
 
   # +$2
   # Each other player discards a Copper card (or reveals a hand with no Copper).
-  elif card == cardnames1.cutpurse:
+  elif card == cardnames.cutpurse:
     bonus += 2
     numPlayers = len(gameState.hands)
     others = [i for i in range(numPlayers) if i != currentPlayer]
     for i in others:
-      if cardnames1.copper in gameState.hands[i]:
-        gameState.hands[i].remove(cardnames1.copper)
-        gameState.discards[i].append(cardnames1.copper)
+      if cardnames.copper in gameState.hands[i]:
+        gameState.hands[i].remove(cardnames.copper)
+        gameState.discards[i].append(cardnames.copper)
     
 
   # Trash this card. Put an Embargo token on top of a Supply pile.
   # When a player buys a card, he gains a Curse card per Embargo token on that pile.
   # choice1 is the supply pile.
-  elif card == cardnames1.embargo:
+  elif card == cardnames.embargo:
     gameState.hands[currentPlayer].remove(card)
     if supply[choice1] > 0:
       embargo[choice1] += 1
@@ -424,7 +424,7 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
 
   # Trash this card. Gain a card costing up to $5.
   # choice1 is the card.
-  elif card == cardnames1.feast:
+  elif card == cardnames.feast:
     gameState.hands[currentPlayer].remove(card)
     if getCost(choice1) > 5:
       return -1
@@ -435,12 +435,12 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
     return 0
 
   # Worth 1 Victory for every 10 cards in your deck (rounded down).
-  elif card == cardnames1.gardens:
+  elif card == cardnames.gardens:
     return -1
 
   # 1 Victory Point
   # +1 Card; +1 Action.
-  elif card == cardnames1.great_hall:
+  elif card == cardnames.great_hall:
     drawCard(currentPlayer, gameState)
     gameState.actions += 1   
     
@@ -448,10 +448,10 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
   # Trash a Treasure card from your hand. 
   # Gain a Treasure card costing up to $3 more; put it into your hand.
   # choice1 is the card to trash, choice2 is the card to gain.
-  elif card == cardnames1.mine:
+  elif card == cardnames.mine:
     if getCost(choice2) > (getCost(choice1) + 3):
       return -1
-    if choice1 not in [cardnames1.copper,cardnames1.gold,cardnames1.silver]:
+    if choice1 not in [cardnames.copper,cardnames.gold,cardnames.silver]:
       return -1
     if choice2 > len(supply) or choice2 < 0:
       return -1
@@ -465,18 +465,18 @@ def cardEffect(card, choice1, choice2, choice3, gameState, handPos, bonus):
   # You only draw 3 cards (instead of 5) in this turn’s Clean-up phase. 
   # Take an extra turn after this one. 
   # This can’t cause you to take more than two consecutive turns.
-  elif card == cardnames1.outpost:
+  elif card == cardnames.outpost:
     gameState.outpost = True
     
   
   # +3 cards
-  elif card == cardnames1.smithy:
+  elif card == cardnames.smithy:
     for i in range(3):
       drawCard(currentPlayer, gameState)
                                
  
   # +1 Card; +2 Actions. 
-  elif card == cardnames1.village:
+  elif card == cardnames.village:
     drawCard(currentPlayer, gameState)
     gameState.actions += 2
     
@@ -503,9 +503,9 @@ def playCard (handPos, choice1, choice2, choice3, gameState):
 
   card = gameState.hands[currentPlayer][handPos]
   
-  action_cards = [cardnames1.adventurer, cardnames1.ambassador, cardnames1.baron, cardnames1.council_room, cardnames1.cutpurse,
-                 cardnames1.embargo, cardnames1.feast, cardnames1.great_hall, cardnames1.mine, cardnames1.outpost, cardnames1.smithy,
-                 cardnames1.village]
+  action_cards = [cardnames.adventurer, cardnames.ambassador, cardnames.baron, cardnames.council_room, cardnames.cutpurse,
+                 cardnames.embargo, cardnames.feast, cardnames.great_hall, cardnames.mine, cardnames.outpost, cardnames.smithy,
+                 cardnames.village]
 
   if card not in action_cards:
     return -1
@@ -522,19 +522,19 @@ def playCard (handPos, choice1, choice2, choice3, gameState):
 # Get cost of card
 def getCost(supplyPos):
   cost = 0
-  if supplyPos in [cardnames1.curse,cardnames1.copper]:
+  if supplyPos in [cardnames.curse,cardnames.copper]:
     return cost
-  elif supplyPos in [cardnames1.estate, cardnames1.embargo]:
+  elif supplyPos in [cardnames.estate, cardnames.embargo]:
     cost = 2
-  elif supplyPos in [cardnames1.silver,cardnames1.ambassador,cardnames1.great_hall,cardnames1.village]:
+  elif supplyPos in [cardnames.silver,cardnames.ambassador,cardnames.great_hall,cardnames.village]:
     cost = 3
-  elif supplyPos in [cardnames1.baron, cardnames1.cutpurse, cardnames1.feast, cardnames1.gardens, cardnames1.smithy]:
+  elif supplyPos in [cardnames.baron, cardnames.cutpurse, cardnames.feast, cardnames.gardens, cardnames.smithy]:
     cost = 4
-  elif supplyPos in [cardnames1.duchy, cardnames1.council_room, cardnames1.mine, cardnames1.outpost]:
+  elif supplyPos in [cardnames.duchy, cardnames.council_room, cardnames.mine, cardnames.outpost]:
     cost = 5
-  elif supplyPos in [cardnames1.gold, cardnames1.adventurer]:
+  elif supplyPos in [cardnames.gold, cardnames.adventurer]:
     cost = 6
-  elif supplyPos == cardnames1.province:
+  elif supplyPos == cardnames.province:
     cost = 8
   else:
     return -1
@@ -582,7 +582,7 @@ def buyCard (supplyPos, gameState):
   gainCard(supplyPos, gameState, 0, currentPlayer)
   if embargo[supplyPos] > 0:
     for i in range(embargo[supplyPos]):
-      gainCard(cardnames1.curse, gameState, 0, currentPlayer)
+      gainCard(cardnames.curse, gameState, 0, currentPlayer)
   gameState.numBuys -= 1 
   return 0
 
