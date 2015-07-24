@@ -1,0 +1,117 @@
+@import sys
+@import random
+@import dominionGame as orig
+@import dominionUpdated as gok
+@import cardnames2 as c
+@
+@def checkReturn(value):
+@  return value
+@
+@def initFirstTurnTest():
+@  return random.randrange(5) 
+@
+@def numHandCards(playerhands):
+@  list = []
+@  list.append(len(playerhands[0]))
+@  list.append(len(playerhands[1]))
+@  return list
+@
+@def numDeckCards(playerdecks):
+@  list = []
+@  list.append(len(playerdecks[0]))
+@  list.append(len(playerdecks[1]))
+@  return list
+@
+@def numDiscards(playerdiscards):
+@  list = []
+@  list.append(len(playerdiscards[0]))
+@  list.append(len(playerdiscards[1]))
+@  return list
+@
+@def whoseTurn(game):
+@  return game.whoseTurn
+@
+@def checkOptions(game):
+@  buy = game.numBuys 
+@  return buy 
+@
+@def checkPhase(game):
+@  return game.phase
+@
+@def checkCoins(game):
+@  return game.coins
+@
+@def checkScore1(score):
+@  return score
+@
+@def checkScore2(score):
+@  return score
+@
+
+source: dominionUpdated.py
+
+pool: %PLAYERS% 1
+pool: %R% 1 REF
+pool: %G% 1 REF
+pool: %KINGDOM% 1
+pool: %HANDPOS% 1
+pool: %CHOICE1% 1
+pool: %CHOICE2% 1
+pool: %SCORE% 1
+
+
+~%KINGDOM% := [7,8,9,10,11,12,13,14,15,16]
+~%PLAYERS% := 2
+~%G% := gok.initializeGame(2,%KINGDOM%,10)
+~%SCORE% := 0
+%CHOICE1% := 0
+%CHOICE2% := 0
+%HANDPOS% := 0
+%HANDPOS% := initFirstTurnTest()
+%R% := gok.playCard(%HANDPOS%, %CHOICE1%, %CHOICE2%, 0, %G%)
+%R% := gok.buyCard(1,%G%)
+%R% := gok.buyCard(2,%G%)
+%R% := gok.buyCard(3,%G%)
+%R% := gok.buyCard(5,%G%)
+%R% := gok.buyCard(6,%G%)
+%R% := gok.buyCard(7,%G%)
+%R% := gok.buyCard(8,%G%)
+%R% := gok.buyCard(9,%G%)
+%R% := gok.buyCard(10,%G%)
+%R% := gok.buyCard(11,%G%)
+%R% := gok.buyCard(12,%G%)
+%R% := gok.buyCard(13,%G%)
+%R% := gok.buyCard(14,%G%)
+%R% := gok.buyCard(15,%G%)
+%R% := gok.buyCard(16,%G%)
+%SCORE% := gok.scoreFor(0,%G%)
+%SCORE% := gok.scoreFor(1,%G%)
+%R% := gok.isGameOver(%G%)
+%R% := gok.endTurn(%G%)
+%CHOICE1% := %[0..16]%
+%CHOICE2% := %[0..16]%
+
+numHandCards(%G%.hands)
+numDeckCards(%G%.decks)
+numDiscards(%G%.discards)
+whoseTurn(%G%)
+checkOptions(%G%)
+checkPhase(%G%)
+checkCoins(%G%)
+checkReturn(%R%)
+checkScore1(%SCORE%)
+checkScore2(%SCORE%)
+
+reference: gok ==> orig
+#reference: hands ==> hand
+#reference: decks ==> deck
+#reference: discards ==> discard
+
+compare: numHandCards
+compare: numDeckCards
+compare: numDiscards
+compare: whoseTurn
+compare: checkOptions
+compare: checkPhase
+compare: checkCoins
+compare: checkReturn
