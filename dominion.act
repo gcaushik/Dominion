@@ -2,7 +2,8 @@
 @import random
 @import dominionGame as orig
 @import dominionUpdated as gok
-@import cardnames2 as c
+@#import cardnames2 as c
+@import cardnames1 as c
 @
 @def checkReturn(value):
 @  return value
